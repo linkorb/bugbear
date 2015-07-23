@@ -1,0 +1,22 @@
+{
+    "name": "linkorb/bug-bear",
+    "description": "Easiest way to test web-pages",
+    "autoload": {
+        "psr-0": {
+            "BugBear": "src"
+        }
+    },
+    "authors": [
+        {
+            "name": "Cesar Rodas",
+            "email": "cesar@rodas.me"
+        }
+    ],
+    "require": {
+        "crodas/cli": "^0.1",
+        "symfony/dom-crawler": "^2.7",
+        "symfony/css-selector": "^2.7",
+        "guzzlehttp/guzzle": "^6.0",
+        "symfony/yaml": "^2.7"
+    }
+}

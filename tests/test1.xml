@@ -1,0 +1,20 @@
+<tests>
+    <test>
+        <open>http://abc.com.py</open>
+        <assert type="statusCode">301</assert>
+        <assert type="redirectTo">http://www.abc.com.py/</assert>
+    </test>
+    <test>
+        <open>http://www.abc.com.py</open>
+        <assert type="statusCode">200</assert>
+        <assert type="title">abc</assert>
+        <assert type="deportes">Deportes</assert>
+    </test>
+    <test>
+        <open>http://www.abc.com.py/buscar/?buscar=partido</open>
+        <assert type="statusCode">200</assert>
+        <assert type="title">abc</assert>
+        <assert type="deportes">Deportes</assert>
+        <assert type=".container h1">Resultados para   “partido”</assert>
+    </test>
+</tests>

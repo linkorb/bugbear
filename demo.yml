@@ -1,0 +1,20 @@
+tests:
+    - open: http://www.onatal.nl/
+      assert:
+        - statusCode: 200
+        - Headers: [Content-Type, Expires, Last-Modified]
+        - title: Onatal Lijn1
+        - sil: Wat kan Onatal voor u betekenen?
+        - sociallinks: Twitter
+        - sociallinks: Google+
+        - sociallinks: Facebook
+        - sociallinks: LinkedIn
+        - footer:  Onatal is het meest gebruikte verloskundig elektronische
+
+    - open: http://www.abc.com.py/buscar/?buscar=partido
+      assert:
+        - statusCode: 200
+        - title: abc
+        - buscar: partido
+        - .container h1: Resultados para   “partido”
+        - deportes: Deportes
