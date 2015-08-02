@@ -3,7 +3,7 @@
 namespace BugBear;
 
 /**
- *  @Cli("bugbear")
+ *  @Cli("run")
  *  @Arg("script", REQUIRED)
  */
 function main($input, $output)

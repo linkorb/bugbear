@@ -1,0 +1,6 @@
+name: bugbear.phar
+files:
+    - src
+    -
+        vendor: { exclude: [tests, Tests] }
+main: cli.php
