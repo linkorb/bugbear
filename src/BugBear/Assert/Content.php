@@ -21,7 +21,7 @@ class Content extends Assertion
         return trim(preg_replace("@[ \r\t\n]+@", " ", $text));
     }
 
-    public function test(Response $response)
+    protected function getCrawler(Response $response)
     {
         $body = (string)$response->getBody();
         if (is_callable('tidy_parse_string')) {
@@ -34,7 +34,32 @@ class Content extends Assertion
             $tidy->cleanRepair(); 
             $body = (string)$tidy;
         }
-        $crawler = new Crawler($body);
+        return new Crawler($body);
+    }
+
+    public function import(Response $response)
+    {
+        $crawler = $this->getCrawler($response);
+        $expects = array();
+        foreach ($this->expected as $assert) {
+            $elements = $crawler->filter($this->getSelector($assert));
+            if ($elements->count() === 0) {
+                continue;
+            }
+            $found = false;
+            foreach ($elements as $element) {
+                $element = new Crawler($element);
+                $text = $this->normalize($element->text() ?: $element->attr('value'));
+                $expects[] = array($assert => $text);
+            }
+        }
+
+        return $expects;
+    }
+
+    public function test(Response $response)
+    {
+        $crawler = $this->getCrawler($response);
         foreach ($this->expected as $assert) {
             $key = key($assert);
             $val = $this->normalize(current($assert));

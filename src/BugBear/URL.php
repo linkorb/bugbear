@@ -28,13 +28,41 @@ class URL
         $this->output->writeLn($text);
     }
 
+    public function import(Array $data, $output)
+    {
+        $this->output = $output;
+        $this->log("<question>" . $this->url . " </question>");
+
+        $client     = new GuzzleHttp\Client;
+        $response   = $client->get($this->url, ['allow_redirects' => false]);
+        $statusCode = (string)$response->getStatusCode();
+
+        if ($statusCode[0] == "3") {
+            $asserts = array(
+                array('statusCode' => $statusCode),
+                array('redirectTo' => $response->getHeader('Location') ?: ''),
+            );
+        } else {
+            $assert = new Assert\Content($data);
+            $asserts =  array_merge($assert->import($response), [
+                array('statusCode' => $response->getStatusCode()),
+            ]);
+        }
+
+        return array(
+            'open' => $this->url,
+            'assert' => $asserts,
+        );
+    }
+
     public function run($output = null)
     {
         $this->output = $output;
+        $this->log("<question>" . $this->url . " </question>");
+
         $client = new GuzzleHttp\Client;
         $response = $client->get($this->url, ['allow_redirects' => false]);
         
-        $this->log("<question>" . $this->url . " </question>");
         foreach ($this->tests as $test) {
             if (!$test->test($response)) {
                 throw new RuntimeException("Test " . get_class($test) . " failed");
