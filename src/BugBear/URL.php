@@ -40,7 +40,7 @@ class URL
         if ($statusCode[0] == "3") {
             $asserts = array(
                 array('statusCode' => $statusCode),
-                array('redirectTo' => $response->getHeader('Location') ?: ''),
+                array('redirectTo' => preg_quote(current($response->getHeader('Location')) ?: '')),
             );
         } else {
             $assert = new Assert\Content($data);
