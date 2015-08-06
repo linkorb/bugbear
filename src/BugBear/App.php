@@ -7,10 +7,11 @@ use Symfony\Component\Yaml\Dumper;
 /**
  *  @Cli("run")
  *  @Arg("script", REQUIRED)
+ *  @Option("through", VALUE_REQUIRED)
  */
 function main($input, $output)
 {
-    $app = new BugBear($input->getArgument('script'));
+    $app = new BugBear($input->getArgument('script'), $input->getOption('through'));
     $app->run($output);
 }
 

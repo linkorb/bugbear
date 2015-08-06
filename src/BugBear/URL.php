@@ -9,12 +9,14 @@ use RuntimeException;
 class URL
 {
     protected $url;
+    protected $proxy;
     protected $output;
     protected $tests = array();
 
-    public function __construct($url)
+    public function __construct($url, $proxy)
     {
-        $this->url = $url;
+        $this->url   = $url;
+        $this->proxy = $proxy;
     }
 
     public function getURL()
@@ -60,8 +62,15 @@ class URL
         $this->output = $output;
         $this->log("<question>" . $this->url . " </question>");
 
-        $client = new GuzzleHttp\Client;
-        $response = $client->get($this->url, ['allow_redirects' => false]);
+        $client  = new GuzzleHttp\Client;
+        $options = ['allow_redirects' => false];
+        $url     = $this->url;
+        if ($this->proxy) {
+            $host = parse_url($this->url, PHP_URL_HOST);
+            $url  = str_replace($host, $this->proxy, $url);
+            $options['headers'] =  ['Host' => $host];
+        }
+        $response   = $client->get($url, $options);
         
         foreach ($this->tests as $test) {
             if (!$test->test($response)) {

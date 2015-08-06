@@ -6,8 +6,11 @@ use RuntimeException;
 
 class BugBear
 {
-    public function __construct($file)
+    protected $proxy;
+
+    public function __construct($file, $proxy = null)
     {
+        $this->proxy = $proxy;
         $parts = explode(".", basename($file));
         $data  = file_get_contents($file);
         $loader = __NAMESPACE__ . '\Loader\\' . strtoupper(end($parts));
@@ -31,7 +34,7 @@ class BugBear
         if (empty($test['open'])) {
             throw new RuntimeException("There is no `open` argument");
         }
-        $url = new URL($test['open']);
+        $url = new URL($test['open'], $this->proxy);
         if (!empty($test['assert'])) {
             $url->addAssertions($test['assert']);
         }
