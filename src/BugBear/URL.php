@@ -63,15 +63,17 @@ class URL
         $this->log("<question>" . $this->url . " </question>");
 
         $client  = new GuzzleHttp\Client;
-        $options = ['allow_redirects' => false];
-        $url     = $this->url;
+        $options = [
+            'allow_redirects' => false,
+            'http_errors' => false
+        ];
+        $url = $this->url;
         if ($this->proxy) {
             $host = parse_url($this->url, PHP_URL_HOST);
             $url  = str_replace($host, $this->proxy, $url);
             $options['headers'] =  ['Host' => $host];
         }
-        $response   = $client->get($url, $options);
-        
+        $response = $client->get($url, $options);
         foreach ($this->tests as $test) {
             if (!$test->test($response)) {
                 throw new RuntimeException("Test " . get_class($test) . " failed");
