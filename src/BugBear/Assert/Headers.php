@@ -10,9 +10,12 @@ class Headers extends Assertion
 {
     public function clean(Array $data)
     {
-        $data = array_map(function($val) {
-            return strtolower($val);
-        }, $data);
+        $data = array_map(
+            function($val) {
+                return strtolower($val);
+            },
+            $data
+        );
         return array_combine($data, $data);
     }
 
@@ -22,7 +25,7 @@ class Headers extends Assertion
         $expected = $this->clean($this->expected);
         foreach ($expected as $value) {
             if (empty($headers[$value])) {
-                throw new RuntimeException("Response didn't have expected header {$value}");
+                throw new RuntimeException("✘ Response didn't have expected header {$value}");
             }
         }
 

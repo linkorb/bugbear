@@ -77,7 +77,7 @@ class Content extends Assertion
                 }
             }
             if (!$found) {
-                throw new RuntimeException("Failed validating that {$key} contains {$val}");
+                throw new RuntimeException("✘ Failed validating that {$key} contains {$val}");
             }
         }
 

@@ -18,5 +18,5 @@ abstract class Assertion
         return $this->expected;
     }
 
-    abstract public function test(Response$client);
+    abstract public function test(Response $client);
 }
