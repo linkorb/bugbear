@@ -1,18 +1,18 @@
 tests:
     - open: http://abc.com.py
       assert:
-        - statusCode: 301
-        - redirectTo: http://www.abc.com.py/
+        - StatusCode: 301
+        - RedirectTo: http://www.abc.com.py/
 
     - open: http://www.abc.com.py/
       assert:
-        - statusCode: 200
+        - StatusCode: 200
         - title: abc
         - deportes: Deportes
 
     - open: http://www.abc.com.py/buscar/?buscar=partido
       assert:
-        - statusCode: 200
+        - StatusCode: 200
         - title: abc
         - buscar: partido
         - .container h1: Resultados para   “partido”
