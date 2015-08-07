@@ -71,14 +71,14 @@ class URL
         if ($this->proxy) {
             $host = parse_url($this->url, PHP_URL_HOST);
             $url  = str_replace($host, $this->proxy, $url);
-            $options['headers'] =  ['Host' => $host];
+            $options['headers'] = ['Host' => $host];
         }
         $response = $client->get($url, $options);
         foreach ($this->tests as $test) {
             if (!$test->test($response)) {
                 throw new RuntimeException("Test " . get_class($test) . " failed");
             }
-            $this->log("\t<info>Passed " . get_class($test) . "</info>");
+            $this->log("\t<info>✔ Passed " . get_class($test) . "</info> Expected <comment>"  . $test->getExpected() . "</comment>");
         }
     }
 

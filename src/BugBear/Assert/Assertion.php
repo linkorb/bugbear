@@ -12,6 +12,11 @@ abstract class Assertion
     {
         $this->expected = $expected;
     }
+    
+    public function getExpected()
+    {
+        return $this->expected;
+    }
 
     abstract public function test(Response$client);
 }
