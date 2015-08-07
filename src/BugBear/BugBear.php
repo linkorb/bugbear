@@ -34,7 +34,11 @@ class BugBear
         if (empty($test['open'])) {
             throw new RuntimeException("There is no `open` argument");
         }
-        $url = new URL($test['open'], $this->proxy);
+        $options = array();
+        if (isset($test['options'])) {
+            $options = $test['options'];
+        }
+        $url = new URL($test['open'], $this->proxy, $options);
         if (!empty($test['assert'])) {
             $url->addAssertions($test['assert']);
         }

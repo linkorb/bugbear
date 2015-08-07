@@ -10,13 +10,15 @@ class URL
 {
     protected $url;
     protected $proxy;
+    protected $options;
     protected $output;
     protected $tests = array();
 
-    public function __construct($url, $proxy)
+    public function __construct($url, $proxy, $options = array())
     {
         $this->url   = $url;
         $this->proxy = $proxy;
+        $this->options = $options;
     }
 
     public function getURL()
@@ -63,10 +65,29 @@ class URL
         $this->log("<question>" . $this->url . " </question>");
 
         $client  = new GuzzleHttp\Client;
+        
+        // Default options
         $options = [
             'allow_redirects' => false,
             'http_errors' => false
         ];
+        
+        // Optionally add basicAuth credentials to the request
+        if (isset($this->options['basicAuth'])) {
+            $basicAuth = $this->options['basicAuth'];
+            $authPart = explode(':', $basicAuth);
+            if (count($authPart) == 1) {
+                throw new RuntimeException("Auth invalid: " . $basicAuth . '. Use the format username:password');
+            }
+            list($username, $password) = $authPart;
+            $username = $this->evaluate($username);
+            $password = $this->evaluate($password);
+            $options['auth'] = [
+                $username,
+                $password
+            ];
+        }
+        
         $url = $this->url;
         if ($this->proxy) {
             $host = parse_url($this->url, PHP_URL_HOST);
@@ -76,12 +97,24 @@ class URL
         $response = $client->get($url, $options);
         foreach ($this->tests as $test) {
             if (!$test->test($response)) {
-                throw new RuntimeException("Test " . get_class($test) . " failed");
+                throw new RuntimeException("\t<error>✘ Failed " . get_class($test) . "</error> Expected <comment>"  . $test->getExpected() . "</comment>");
             }
             $this->log("\t<info>✔ Passed " . get_class($test) . "</info> Expected <comment>"  . $test->getExpected() . "</comment>");
         }
     }
 
+    private function evaluate($string)
+    {
+        if ($string[0]=='$') {
+            $string = substr($string, 1);
+            if (!getenv($string)) {
+                throw new RuntimeException("Environment variable '$string' not defined");
+            }
+            $string = getenv($string);
+        }
+        return $string;
+    }
+    
     public function addAssertions(Array $assertions)
     {
         $content = array();
