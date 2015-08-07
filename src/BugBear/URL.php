@@ -99,7 +99,11 @@ class URL
             if (!$test->test($response)) {
                 throw new RuntimeException("\t<error>✘ Failed " . get_class($test) . "</error> Expected <comment>"  . $test->getExpected() . "</comment>");
             }
-            $this->log("\t<info>✔ Passed " . get_class($test) . "</info> Expected <comment>"  . $test->getExpected() . "</comment>");
+            $expected = $test->getExpected();
+            if (is_array($expected)) {
+                $expected = "Array[" . count($expected) . "]";
+            }
+            $this->log("\t<info>✔ Passed " . get_class($test) . "</info> Expected <comment>" . $expected . "</comment>");
         }
     }
 
